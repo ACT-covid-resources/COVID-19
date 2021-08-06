@@ -6,6 +6,9 @@
  * [USA daily state reports (csse_covid_19_daily_reports_us)](#usa-daily-state-reports-csse_covid_19_daily_reports_us)
  * [Time series summary (csse_covid_19_time_series)](#time-series-summary-csse_covid_19_time_series)
  * [Data modification records](#data-modification-records)
+ * [Retrospective reporting of (probable) cases and deaths](#retrospective-reporting-of-probable-cases-and-deaths)
+ * [Large-scale back distributions](#large-scale-back-distributions)
+ * [Irregular Update Schedules](#irregular-update-schedules)
  * [UID Lookup Table Logic](#uid-lookup-table-logic)
 ---
 
@@ -27,8 +30,8 @@ MM-DD-YYYY.csv in UTC.
 * <b>Deaths</b>: Counts include confirmed and probable (where reported).
 * <b>Recovered</b>: Recovered cases are estimates based on local media reports, and state and local reporting when available, and therefore may be substantially lower than the true number. US state-level recovered cases are from [COVID Tracking Project](https://covidtracking.com/).
 * <b>Active:</b> Active cases = total cases - total recovered - total deaths.
-* <b>Incidence_Rate</b>: Incidence Rate = cases per 100,000 persons.
-* <b>Case-Fatality Ratio (%)</b>: Case-Fatality Ratio (%) = Number recorded deaths / Number cases.
+* <b>Incident_Rate</b>: Incidence Rate = cases per 100,000 persons.
+* <b>Case_Fatality_Ratio (%)</b>: Case-Fatality Ratio (%) = Number recorded deaths / Number cases.
 * All cases, deaths, and recoveries reported are based on the date of initial report. Exceptions to this are noted in the "Data Modification" and "Retrospective reporting of (probable) cases and deaths" subsections below.  
 
 ### Update frequency
@@ -65,9 +68,9 @@ MM-DD-YYYY.csv in UTC.
 * <b>Active</b> - Aggregated confirmed cases that have not been resolved (Active cases = total cases - total recovered - total deaths).
 * <b>FIPS</b> - Federal Information Processing Standards code that uniquely identifies counties within the USA.
 * <b>Incident_Rate</b> - cases per 100,000 persons.
-* <b>People_Tested</b> - Total number of people who have been tested.
+* <b>Total_Test_Results</b> - Total number of people who have been tested.
 * <b>People_Hospitalized</b> - Total number of people hospitalized. (Nullified on Aug 31, see [Issue #3083](https://github.com/CSSEGISandData/COVID-19/issues/3083))
-* <b>Mortality_Rate</b> - Number recorded deaths * 100/ Number confirmed cases.
+* <b>Case_Fatality_Ratio</b> - Number recorded deaths * 100/ Number confirmed cases.
 * <b>UID</b> - Unique Identifier for each row entry. 
 * <b>ISO3</b> - Officialy assigned country code identifiers.
 * <b>Testing_Rate</b> - Total test results per 100,000 persons. The "total test results" are equal to "Total test results (Positive + Negative)" from [COVID Tracking Project](https://covidtracking.com/).
@@ -140,6 +143,101 @@ Date: Location | Change | Files affected | Reason/Other notes | Source
 * October 5: Missouri | We have noted irregularities with the reporting for Missouri from September 29-October 1 due to changes in reporting by the Missouri Department of Health. We are working to correct our time series data.
 * October 13: Rhode Island, US | in collaboration with the Rhode Island Department of Health, we have been able to recreate the county level death time series for Rhode Island. Moving forward, we will be reporting deaths at the county level | time_series_deaths_us.csv & time_series_deaths_global.csv. Rhode Island will be publishing county level cases and deaths once per week. Please see issue #3229 for more details. 
 * October 15: Luxembourg | Update for stale data October 8 through 14 | All time series files and daily reports | Updated via [daily report pdfs](https://data.public.lu/fr/datasets/covid-19-rapports-journaliers/#_) from national source
+* October 27: Alaska | Add non-resident cases from March 12 to October 26 | Confirmed cases - time series tables for the US and global | NA | [Cases by date reported](https://coronavirus-response-alaska-dhss.hub.arcgis.com/datasets/geographic-distribution-of-all-cases-by-date-reported)
+* October 30: Franklin County, VA | Rewrite time series 8/22 to 10/28 with appropriate data | All time series files and us daily reports for 8/22 through 10/28 | Internal mapping error had lead to cases in Franklin City, VA replacing values for Franklin County, VA as well as the source for Franklin City going stale
+* October 31: Greece | Edit recoveries August 4 to present | time_series_covid19_recovered_global.csv | Update recovery data using government press releases | [Source](https://eody.gov.gr/category/deltia-typoy/)
+* Unassigned, Colorado | Addition of historical "international" entry to unassigned cateogry | time_series_covid19_confirmed_us.csv, time_series_covid19_confirmed_global.csv | Addition of missing cases from an international entry - cases moving forward will include these cases in unassigned | Data used from the csv file hosted [here](https://data-cdphe.opendata.arcgis.com/datasets/222c9d85e93540dba523939cfb718d76_0)
+* November 9: Puerto Rico, US | Revision of historical data in line with clarification from the Puerto Rican health department regarding suspected versus probable cases | time_series_covid19_cases_US.csv, time_series_covid19_cases_global.csv | Prior to November 7, Puerto Rico suspected cases were serology test results, which are incongruent with our working definition of probable cases. The breakdown is now indicated and we have used historical reporting to alter our previous reported totals. This change brings reporting for the territory in line with national reporting for the rest of the US. [Source](http://www.salud.gov.pr/Estadisticas-Registros-y-Publicaciones/Pages/COVID-19.aspx)
+* November 9: Georgia, US | Revision of data from November 3-8 in line with newly published antigen data, taken from coincident reporting with the state dashboard | All time series files and daily reports | [Source](https://dph.georgia.gov/covid-19-daily-status-report)
+* November 9: Kansas, US | Revision of data from September 20 to November 8 to deconflict differences in reporting between state and county sources. Max of source used as ground truth. | All time files and daily reports | [State source](https://www.coronavirus.kdheks.gov/160/COVID-19-in-Kansas), [County source](https://experience.arcgis.com/experience/9a7d44773e4c4a48b3e09e4d8673961b/page/page_18/)
+* November 9: Wisconsin, US | Revision of data beginning October 19th to include probable cases *and deaths*. | All time files and daily reports
+* November 18: Alabama, US | In collaboration with the Alabama Department of Health, we have received a file with a proper back distribution of all cumulative and probable cases at the county level from January 22 to November 10. These cases are being used to back-distribute the September 15 case spike and are also overwriting all data in the time series and daily reports for consistencies sake | time_series_covid19_confirmed_us.csv, time_series_covid19_global_us.csv, all daily reports
+* November 18: Guyana | Revision of confirmed cases data on November 16 from 4894 to 4874 due to a type on the national dashboard | time_series_covid19_confirmed_global.csv, 11-16-2020.csv | [Ministry source](https://www.facebook.com/mohguyana/posts/2485156248454573)
+* November 23: Nunavut, Canada | Add Nunavut cases from November 6-22 | All time files and daily reports | [Government of Nunavut News](https://www.gov.nu.ca/news/345?page=1)
+* November 24: Kansas, US | Revision of deaths for Kansas from April 4 to November 23 | All time files and daily reports | [Kansas State Dashboard](https://www.coronavirus.kdheks.gov/DocumentCenter/View/1529/Nov-23-case-summary?bidId=)
+* November 24: Texas, US | Revision of cases for Titus, Texas from May 22 to November 23 | All time files and daily reports | [Texas State Dashboard](https://txdshs.maps.arcgis.com/apps/opsdashboard/index.html#/ed483ecd702b4298ab01e8b9cafc8b83)
+* December 2: Afghanistan | Revision of cases for Afghanistan from March 1 to November 30 | All time files and daily reports | [Afghanistan Ministry of Public Health](http://covid.moph-dw.org)
+* December 4: Israel | Revision of cases for Israel from February 27 to December 3 | All time files and daily reports | [Ministry of Health of Israel](https://datadashboard.health.gov.il/COVID-19/general)
+* December 7: Samoa | Addition of cases, deaths, and recovered for Samoa | All time files and daily reports | [Ministry of Samoa](https://www.facebook.com/samoagovt)
+* December 8: New Hampshire, US | Correction of cases and deaths from November 29 to December 6 | All time files and daily reports | [New Hampshire DHHS](https://www.nh.gov/covid19/news/updates.htm)
+* December 15: New York, US | Correction of cases and deaths from November 2 to December 14 for Orange and Rockland counties | All time files and daily reports | [Orange County Dashboard](https://ocnygis.maps.arcgis.com/apps/opsdashboard/index.html#/21de1fb5ce0c480f95dc0cf2b8b83b71) [Rockland County Dashboard](https://rockland-covid-19-portal-rockland.hub.arcgis.com/)
+* December 15: France | Correction of cases and deaths from March 3 to December 14 for in accordance with the Ministry of Solidarity and Health | All time files and daily reports | [Ministry of Solidarity and Health](https://www.data.gouv.fr/en/datasets/donnees-relatives-a-lepidemie-de-covid-19-en-france-vue-densemble/#_)
+* December 15: French Overseas Territories | Correction of cases and deaths from December 6 to December 14 for Guadeloupe, French Guiana, Martinique, Mayotte, and Reunion in accordance to WHO | All time files and daily reports | [WHO](https://covid19.who.int/WHO-COVID-19-global-table-data.csv)
+* December 17: Washington, US | Correction of deaths from April 1 to December 15 and inclusion of probable cases from June 1 to December 15 for Washington in accordance to Washington Department of Health | All time files and daily reports | [Washington Department of Health](https://www.doh.wa.gov/Emergencies/COVID19/DataDashboard)
+* December 29: New York, US | Correction of probable cases from August 31 to December 28 for New York City in accordance to NYC Health | All time files and daily reports | [NYC Health](https://www1.nyc.gov/site/doh/covid/covid-19-data-totals.page)
+* January 7, 2021: Texas, US | Correction of probable cases from April 1, 2020 to January 5, 2021 for Tarrant County in accordance to Tarrant County Public Health | All time files and daily reports | [Tarrant County Public Health](https://www.tarrantcounty.com/en/public-health/disease-control---prevention/COVID-19.html)
+* January 10, 2021: New Jersey, US | Correction of probable cases from May 1, 2020 to January 9, 2021 for all counties in accordance with NJ Health COVID-19 Dashboard | All time files and daily reports | [NJ Department of Health](https://www.nj.gov/health/cd/topics/covid2019_dashboard.shtml)
+* January 14, 2021: Yemen | Overwriting of time series using data from Yemeni Ministry of Health | [Source](https://twitter.com/YSNECCOVID19) | **Note**: Source may be blocked in the United States
+* January 15, 2021: Kansas, US | Adjustment of time series to use data from Kansas Department of Health and Environment | All time files and daily reports | [Kansas DHE](https://www.coronavirus.kdheks.gov/160/COVID-19-in-Kansas)
+* January 15, 2021: Kansas, US | Adjustment of time series to use data from Douglas County Coronavirus Response and Recovery Hub | All time files and daily reports | [Douglas Dashboard](https://coronavirus-response-dgco.hub.arcgis.com/)
+* January 15, 2021: Kansas, US | Adjustment of time series to use data from Finney County COVID-19 Resource Hub | All time files and daily reports | [Finney Dashboard](https://finney-county-coronavirus-response-finneycountygis.hub.arcgis.com/)
+* January 15, 2021: Kansas, US | Adjustment of time series to use data from Riley County Corona Virus Response | All time files and daily reports | [Riley Dashboard](https://coronavirus-response-rcitgis.hub.arcgis.com/)
+* January 19, 2021: California, US | Adjustment of time series to shift data for later sampling time from California State Government | All time files and daily reports | [California State Government](https://covid19.ca.gov/state-dashboard/)
+* January 19, 2021: California, US | Adjustment of time series to shift data for later sampling time from California State Government | All time files and daily reports | [California State Government](https://covid19.ca.gov/state-dashboard/)
+* January 19, 2021: Douglas, Nebraska, US | The original death data on 1/07 (617) was due to a data entry error from the county health department, which was corrected on 1/08. However, the state health department has been unable to provide a proper death total for this day. To remove the artificial spike, we have held the death total from 1/06 stale (525). | time_series_covid19_deaths_US.csv, time_series_covid19_deaths_global.csv, 01-07-2021.csv | No source needed
+* January 21, 2021: Sweden | See issue #3594, the deaths have been altered to be consistently "deaths by date of report" | time_series_covid19_deaths_global.csv | [Source](https://www.svt.se/special/articledata/2322/fohm_timeline.json)
+* January 25, 2021: Haiti | Adjustment of time series to use data from Haiti Ministry of Health | All time series files and daily reports | [Source](https://www.mspp.gouv.ht/)
+* January 25, 2021: California, US | Revision of cases for Orange County, CA to include probable cases from 2020-04-01 to 2021-01-24 | All time series files and daily reports | [Source](https://ochca.maps.arcgis.com/apps/opsdashboard/index.html#/cc4859c8c522496b9f21c451de2fedae)
+* January 25, 2021: California, US | Revision of cases for Stanislaus County, CA to include probable cases from 2020-04-17 to 2021-01-24 | All time series files and daily reports | [Source](https://experience.arcgis.com/experience/c29aa0c6a84844ceab6601da4b124c0b)
+* January 26, 2021: Sudan | Adjustment of cases for Sudan to World Health Organization data from 2020-3-13 to 2021-01-25 | All time series files and daily reports | [Source](https://covid19.who.int/WHO-COVID-19-global-table-data.csv)
+* January 27, 2021: Missouri, US | Adjustment of St. Louis City, MO cases and deaths from 2020-03-03 to 2021-01-26 | All time series files and daily reports | [Source](https://www.stlouis-mo.gov/covid-19/data/)
+* January 28, 2021: Quebec, Canada | Adjustment of Quebec deaths from 2020-03-17 to 2021-01-27 | All time series files and daily reports | [Source](https://www.quebec.ca/en/health/health-issues/a-z/2019-coronavirus/situation-coronavirus-in-quebec/)
+* February 01, 2021: Illinois, US | Adjustment of Illinois probable deaths from 2020-11-07 to 2021-01-31 | All time series files and daily reports | [Source](https://www.dph.illinois.gov/covid19)
+* February 02, 2021: Lithuania | Adjustment of Lithuania cases, deaths, and recovered from 2020-02-28 to 2021-02-01 based on Lithuania dashboard | All time series files and daily reports | [Dashboard](https://osp.maps.arcgis.com/apps/MapSeries/index.html?appid=c6bc9659a00449239eb3bde062d23caa)
+* February 09, 2021: Indiana, US | Redsitribution of previously identified historical deaths to unassigned category. State total reported from Department of Health was compared to time_series_covid19_deaths_us.csv and the difference was distributed to Unassigned, Indiana. | All time series files and daily reports | [Indiana source](https://www.coronavirus.in.gov/2393.htm) | We hope to receive a county level distribution from the state health department but we have not yet received a response
+* February 11, 2021: Delaware, US | As referenced in [Issue #3666](https://github.com/CSSEGISandData/COVID-19/issues), this modification is a back distribution of all Delaware deaths at the county level | All time series files and daily reports | [Delaware source]( https://myhealthycommunity.dhss.delaware.gov/locations/state#deaths-trends)
+* February 15, 2021: Lithuania | Adjustment of Lithuania recovered from 2020-03-19 to 2021-02-13 for updated numbers, and patched cases and deaths from 2021-02-11 to 2021-02-14 due to stale data. | All time series files and daily reports | [Dashboard](https://osp.maps.arcgis.com/apps/MapSeries/index.html?appid=c6bc9659a00449239eb3bde062d23caa)
+* February 16, 2021 | Ohio, US | Back distribution of deaths at the county level to correct for large release of backlogged deaths. | All time series and daily reports | [Press release](https://odh.ohio.gov/wps/portal/gov/odh/media-center/odh-news-releases/odh-news-release-02-10-20), [Data source - csv link](https://coronavirus.ohio.gov/static/dashboards/COVIDSummaryData.csv) | There are 78 deaths with an Unknown Date of Death but known county residence. For these, the data of hospital admission was used, or the date of symptom onset if hospital admission was also unknown. This avoids all 78 being placed in one day.
+* February 19, 2021 | New South Wales, Australia | Adjustment of recovered to 0 to reflect #3694 | All time series and daily reports | [NSW Health](https://www.health.nsw.gov.au/news/Pages/20200730_00.aspx)
+* February 20, 2021: Texas, US | Correction to Tom Green, Texas cases due to source reporting for 2021-02-13 to 2021-02-18 | [Source](https://www.cosatx.us/Home/ShowDocument?id=33418)
+* February 22, 2021 | Israel | Adjustment of data for 1/25 and 1/26 to match media reports due to source issue | time_series_confirmed_global.csv and 1/25/2021 and 1/26/2021 daily reports | [Source 1](https://www.israelhayom.com/2021/01/25/health-ministry-180-people-infected-by-single-passenger-returning-from-dubai/), [Source 2](https://www.israelhayom.com/2021/01/26/health-minister-relentless-covid-morbidity-requires-extending-lockdown/)
+* March 3, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv) | This correction nullifies the Ohio correction on February 16
+* March 3, 2021 | Iowa, US | Fix case time series to replace “total positive tests” values with “positive tests by individual”. Stale county level data on February 20 is due to lack of data access on that day | All case time series and daily reports | [Source](https://coronavirus.iowa.gov/)
+* March 6, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* March 7, 2021 | Iowa, US | Adjust time series to represent more standardized sampling times for Iowa data | All case time series and daily reports | [Source](https://coronavirus.iowa.gov/)
+* March 8, 2021 | Pennsylvania, US | Adjust US daily reports to reflect correct testing data | All US daily reports | [Source](https://www.health.pa.gov/topics/disease/coronavirus/Pages/Cases.aspx)
+* March 10, 2021 | Spain | Released an updated daily report that included a downgrade of the number of cases in Catalonia | March 10 daily report and time_series_covid19_confirmed_global.csv | [Source](https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov/documentos/Actualizacion_329_COVID-19.pdf)
+* March 11, 2021 | Missouri, US | Reallocate Missouri probables into Unassigned for the inclusion of new probable cases | All daily reports and time series | [Source](https://results.mo.gov/t/COVID19/views/COVID-19DataforDownload/MetricsbyReportDate.csv)
+* March 11, 2021 | Missouri, US | Correct stale data for St. Louis City, Missouri and apply back distribution for cases and deaths | All daily reports and time series | [Source](https://www.stlouis-mo.gov/government/departments/health/communicable-disease/covid-19/data/index.cfm)
+* March 12, 2021 | Missouri, US | Account for St. Louis county and St. Louis City probables within the Missouri time series | All daily reports and time series | [Source](https://showmestrong.mo.gov/data/public-health/)
+* March 14, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* March 21, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* March 28, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* March 30, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* April 2, 2021 | Alaska, US | In response to the state's separation of Valdez-Cordova, AK into Copper River, AK and Chugach, AK, we have recreated the time series including these two locations using the official data from the Alaska dashboard | [Source](https://alaska-coronavirus-vaccine-outreach-alaska-dhss.hub.arcgis.com/app/6a5932d709ef4ab1b868188a4c757b4f)
+* April 5, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* April 7, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* April 12, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* April 13, 2021| Kern, California, US | Replacement of historical data with that of the LA Times aggregator due to source change and stale data. | All time series files and daily reports for which there was a difference between historical data and new source | [Source](https://github.com/datadesk/california-coronavirus-data/blob/master/latimes-county-totals.csv)
+* April 13, 2021 | Oklahoma, US | Further to issue #3936, we have back distributed the backlogged 1,414 cases to their appropriate date with the assistance of the Oklahoma State Health Department. All cases have been distributed to the unassigned category. See #3936 for further details. | Time series files and daily reports | Personal correspondence, see #3936 for further details.
+* April 14, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* April 19, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* April 22, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* April 26, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* April 28, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* May 3, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* May 4, 2021 | Kansas, US | Update Labette, Kansas deaths based on correct data from state dashboard | [KS Dashboard](https://www.coronavirus.kdheks.gov/160/COVID-19-in-Kansas)
+* May 10, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* May 17, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* May 24, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* June 01, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* June 07, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* June 07, 2021 | Peru | Back distribution of deaths to account for release of backlogged deaths from Peru's Ministry of Health | [Data Source](https://www.datosabiertos.gob.pe/dataset/fallecidos-por-covid-19-ministerio-de-salud-minsa)
+* June 11, 2021 | California, US | Back correction of Alameda, California's deaths due to adjustment of death counts to agree with the state definition. | [Data Source](https://covid19.ca.gov/state-dashboard/#location-alameda)
+* June 13, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* June 14, 2021 | Singapore | Data for June 12 updated to match news source | [Source](https://www.straitstimes.com/singapore/nine-new-community-cases-cleaner-at-ion-orchard-among-5-unlinked-covid-19-cases)
+* June 21, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* June 28, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* June 28, 2021 | Illinois, US | Adjust Illinois case count to properly match their historical records for state level data. | [Data Source](https://www.dph.illinois.gov/covid19/data-portal)
+* July 01, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* July 05, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* July 07, 2021 | California, US | Adjust Santa Clara, California to match the state dashboard's reported date time series | [Data Source](https://covid19.ca.gov/state-dashboard/#location-santa_clara)
+* July 12, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* July 19, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* July 25, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+* July 27, 2021 | New York, US | Back correction of Rockland, NY deaths to match the New York State COVID-19 Fatalities by County dataset | [Data Source](https://health.data.ny.gov/Health/New-York-State-Statewide-COVID-19-Fatalities-by-Co/xymy-pny5)
+* August 02, 2021 | Ohio, US | To match Ohio’s new reporting standards, the Ohio death time series is being overwritten with date of death data, and the entire time series will be updated with each time Ohio updates their death data. This is expected to occur approximately twice per week. | [Data Source](https://coronavirus.ohio.gov/static/dashboards/COVIDDeathData_CountyOfResidence.csv)
+
 
 ## Retrospective reporting of (probable) cases and deaths
 This section reports instances where large numbers of historical cases or deaths have been reported on a single day. These reports cause anomalous spikes in our time series curves. When available, we liaise with the appropriate health department and distribute the cases or deaths back over the time series. If these are successful, they will be reported in the below section titled "Large Scale Back Distributions". A large proportion of these spikes are due to the release of probable cases or deaths.
@@ -152,6 +250,7 @@ Date: Location | Change | Reason/Other notes | Source
 * April 24: Republic of Ireland | Spike of 189 deaths | Source begins including probable deaths (those with COVID-19 listed as cause of death but no molecular test) | [Source](https://www.irishnews.com/news/republicofirelandnews/2020/04/24/news/republic-s-covid-19-death-toll-passes-1-000-1915278/)
 * April 29: United Kingdom | Death counts updated to reflect deaths outside of hospitals | [Source](https://metro.co.uk/2020/04/29/uk-death-toll-rises-26097-care-homes-included-12628454/) | **Back Distributed**
 * May 6: Belgium | 339 new deaths, 229 of which had occured over recent weeks | [Source](http://www.xinhuanet.com/english/2020-05/06/c_139035611.htm)
+* May 20, 2020: Spain | Reduction in cases and deaths for some autonomous communities due to data validation effort | [Source](https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov/documentos/Actualizacion_116_COVID-19.pdf)
 * June 5: Michigan, US | Release of probable cases and deaths | See [Issue #2704](https://github.com/CSSEGISandData/COVID-19/issues/2704) | **Back Distributed**
 * June 8: Chile | Spike of 653 deaths | Historical deaths | [Source](https://www.emol.com/noticias/Nacional/2020/06/07/988430/minsal-muertos-covid19.html)
 * June 11: Michigan, US | Michigan started to report probable cases and probable deaths on June 5. ([Source](https://www.michigan.gov/coronavirus/0,9753,7-406-98158-531156--,00.html)) We combined the probable cases into the confirmed cases, and the probable deaths into the deaths. As a consequence, a spike with 5.5k+ cases is shown in our daily cases bar chart.
@@ -180,9 +279,8 @@ Date: Location | Change | Reason/Other notes | Source
 * September 4: Illinois | Spike of 5,368 cases | Test backlog | [Source](https://www.nbcchicago.com/news/coronavirus/illinois-reports-5368-new-coronavirus-cases-after-test-backlog-29-additional-deaths/2334290/).
 * September 6: Ecuador | Drop of 7953 cases | Definition of confirmed cases from PCR+rapid tests to only PCR tests | [Source](https://www.salud.gob.ec/msp-presenta-actualizacion-de-indicadores-en-infografia-nacional-covid-19/).
 * September 7: Ecuador | Inclusion of 3758 probable deaths | The first date where the probable cases are delineated is [September 8](https://twitter.com/Salud_Ec/status/1303463345056616450/photo/1)
-* September 15: Alabama | Distributino of probable cases to the county level (previously aggregated at the state level, in unassigned, AL). This resulted in significant increase in cases in nearly all counties. We are working to get the historical distribution of these probable cases from the State, and will update the timeseries accordingly when we do.
+* September 15: Alabama | Distributino of probable cases to the county level (previously aggregated at the state level, in unassigned, AL). This resulted in significant increase in cases in nearly all counties. We are working to get the historical distribution of these probable cases from the State, and will update the timeseries accordingly when we do. | **Back Distributed**
 * September 15: Arkansas | Addition of 139 probable deaths | [News source](https://katv.com/news/local/arkansas-gov-asa-hutchinson-to-give-covid-19-briefing-09-15-2020).
-
 * September 15-21: Virginia | Progressive inclusion of backlogged deaths into the state total throughout the week | [News source](https://www.wtkr.com/news/coronavirus/local-area-reports-zero-covid-19-deaths-from-sunday-virginia-continues-to-see-steady-decrease-in-test-percent-positivity)
 * September 21: Texas, US | Release of large swath of historical cases affecting 25 counties. Please see pinned issue #3143 for full statement from Texas dashboard.
 * September 25: North Carolina | Spike of 6000 cases due to inclusion of positive antigen tests as probable cases | **Back Distributed**
@@ -196,6 +294,81 @@ Date: Location | Change | Reason/Other notes | Source
 * October 18: Navajo County, Arizona | Reduction of -52 cases | Reconciliation of database entry errors | [Source](https://twitter.com/NavajoCountyAZ/status/1317506622281850881)
 * October 23: Alabama, US | Inclusion of 2565 backlogged antigen positives in Mobile and 1182 backlogged antigen and PCR tests from around the state | [Source](https://alpublichealth.maps.arcgis.com/apps/opsdashboard/index.html#/6d2771faa9da4a2786a509d82c8cf0f7) "The Alabama Department of Public Health processed a backlog of 2565 positive antigen results from a facility in Mobile on October 22. These will be classified as “probable” COVID-19 cases reported on 10/22/20 even though the tests were performed during June through October 18, 2020. The Alabama Department of Public Health processed a backlog of 1182 positive results from a variety of facilities all over Alabama. A majority of these will be classified as “probable” COVID-19 cases reported on 10/23/20 even though the tests were performed during April through September."
 * October 23: Los Angeles County, California, US | Estimated 2000 backlogged cases included in daily report | [Source](https://github.com/CSSEGISandData/COVID-19/issues/3267)
+* November 4: Spain | Inclusion of 5,105 cases and 1,326 deaths that occurred prior to May 11 | [Source](https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov/documentos/Actualizacion_243_COVID-19.pdf)
+* November 3: Georgia, US | Inclusion of 29,937 antigen tests distributed over unknown period of days. This includes 450 probable deaths. | We have contacted the state health department to obtain a back distribution [Media source](https://www.wrbl.com/news/georgia-news/update-georgia-reports-364589-confirmed-covid-19-cases-statewide-with-6440-in-columbus/)  
+* November 10: Louisiana, US | Inclusion of probable cases from August 26 through November 9 and ongoing inclusion of probable cases. Probables are aggregated in the Unassigned, Louisiana entry
+* November 16: Louisiana, US | Disbursement of probable cases from Unassigned, Louisiana to the county level. Probables will be at the county level moving forward.
+* December 2: Kazakhstan | Back-distrubution of probable cases, deaths, and recoveries from official sources and coincident reporting including the Ministry of Health of the Repulbic of Kazakhstan, the European Commission Joint Research Center, the European Centre for Disease Prevention and Control, and Tengrinews
+* December 2: Alabama, US | Addition of backlog of 706 PCR results from November 23 to 29 | [Source](https://alpublichealth.maps.arcgis.com/apps/opsdashboard/index.html#/6d2771faa9da4a2786a509d82c8cf0f7)
+* December 4: Massachusetts, US | Addition of historical cases from December 1 | "Today’s case numbers include 680 positive cases tested by one Massachusetts-based laboratory prior to December 1. The delay in reporting was caused by a technical issue with the software used by that laboratory’s reporting vendor." | [Massachusetts dashboard](https://www.mass.gov/info-details/covid-19-response-reporting).
+* December 7: Iowa, US | Alteration of death definition to include COVID-19 probable deaths without positive PCR or antigen tests | This change resulted in an increase of 469 deaths on December 11 | [Government source, including methodology definitions](https://idph.iowa.gov/News/ArtMID/646/ArticleID/158384)
+* December 9: Ohio, US | Addition of nearly 13000 backlogged antigen tests | [News source](https://www.cleveland.com/open/2020/12/ohio-reports-25721-new-coronavirus-cases-an-expected-one-day-record-due-to-clearing-backlog-tuesday-update.html)
+* December 9: Alabama, US | Addition of backlog of 1038 PCR and 473 probable cases from November 30 - December 5 | [Source](https://alpublichealth.maps.arcgis.com/apps/opsdashboard/index.html#/6d2771faa9da4a2786a509d82c8cf0f7)
+* December 10: Turkey | Addition of 792,801 cases asymptomatic cases | [Source](https://covid19.saglik.gov.tr/) | We note that this heavily distorst all of our products and we are attempting to find an official back distribution of this data
+* December 13: Alabama, US | Inclusion of 298 backlogged antigen tests from July 7 through December 9 | [Source](https://alpublichealth.maps.arcgis.com/apps/opsdashboard/index.html#/6d2771faa9da4a2786a509d82c8cf0f7)
+* December 16: Washington, US | Inclusion of 7,671 probable cases from June to present | [Source](https://www.doh.wa.gov/Emergencies/COVID19/DataDashboard) | We are working a back distribution
+* December 16: California, US | California dashboard included 15,337 historical cases in their December 16 update | We pull from several sources including the California State Daashboard so it is unclear how these historical cases are distributed within our data | [Source](https://covid19.ca.gov/state-dashboard/)
+* December 17: Hidalgo, Texas, US | Reduction in cases due to double counting probable and confirmed cases | [Source 1](https://www.hidalgocounty.us/DocumentCenter/View/43316/12162020---Eight-deaths-related-to-COVID-19-reported-in-Hidalgo-County-along-with-377-positive-cases), [Source 2](https://www.hidalgocounty.us/DocumentCenter/View/43374/12172020---Four-deaths-related-to-COVID-19-reported-in-Hidalgo-County-along-with-522-positive-cases)
+* January 5: Alabama, US | Backlog of cases from the holiday period resulted in daily record of cases | Quote from source: "Case counts reported on today's update are high. Today's increase represents a delay in testing and reporting to the Alabama Department of Public Health (ADPH) due to the holiday weekends." | [Source](https://alpublichealth.maps.arcgis.com/apps/opsdashboard/index.html#/6d2771faa9da4a2786a509d82c8cf0f7)
+* January 25: Hawaii, US | Identification of unreported COVID-19 deaths results in a statewide spike of 60 deaths | [Source](https://www.kitv.com/story/43230995/60-covid19-related-deaths-went-unreported-doh-finds)
+* February 1: South Carolina, US | 210 newly reported deaths include backlog extending back to October | [News source](https://www.wistv.com/2021/02/01/dhec-new-covid-cases-reported-monday-deaths-announced-after-system-issue/#:~:text=COLUMBIA%2C%20S.C.%20(WIS)%20%2D,30.)
+* February 5: Indiana, US | "Today's total deaths includes 1,507 historical deaths identified through an audit of 2020 and 2021 COVID death records and test results." | [Source](https://www.coronavirus.in.gov/2393.htm) | **See Data Mod records**
+* February 10: Ohio, US | "Ohio to add approximately 4,000 COVID-19 deaths to death total" over the next several days | [Source](https://odh.ohio.gov/wps/portal/gov/odh/media-center/odh-news-releases/odh-news-release-02-10-20) | **Back distributed, see Data Mod records**
+* February 18, 2021: New Hampshire, US | Inclusion of 421 backlogged cases from November to January | [Source](https://www.nh.gov/covid19/news/documents/covid-19-update-02172021.pdf)
+* February 20, 2021: Delaware, US | Inclusion of 24 backlogged deaths from December and January | [Source](https://baytobaynews.com/stories/delawares-covid-related-death-toll-rises-by-24-to-1245,38744?)
+* February 20, 2021: Ohio, US | Continual updates to "Ohio to add approximately 4,000 COVID-19 deaths to death total" over the next several days | [Source](https://odh.ohio.gov/wps/portal/gov/odh/media-center/odh-news-releases/odh-news-release-02-10-20) | **Back distributed, see Data Mod records**
+* February 22, 2021: Rhode Island, US | Inclusion of 81 historical deaths in today's report | [Source](https://eu.providencejournal.com/story/news/healthcare/2021/02/22/ri-covid-numbers-9-deaths-835-additional-cases-over-last-3-days/4539308001/)
+* February 24, 2021: LA, California, US | Inclusion of 806 historical deaths that primarily occurred between December 3, 2020 and February 3, 2021 | [Source](http://publichealth.lacounty.gov/phcommon/public/media/mediapubhpdetail.cfm?prid=2983)
+* February 25, 2021: Jefferson, Wisconsin, US | 30 deaths reported in a single day due to data not previously being transferred to the state health department correctly | [News source](https://wkow.com/2021/02/25/52-more-dead-from-covid-19-in-wisconsin-7-1-percent-fully-vaccinated/)
+* February 28, 2021: Rhode Island, US | Distribute the inclusion of 81 historical deaths between March 27, 2020 to February 26, 2021 | [Source](https://www.providencejournal.com/story/news/healthcare/2021/02/22/ri-covid-numbers-9-deaths-835-additional-cases-over-last-3-days/4539308001/)
+* March 2, 2021: Spain | Removal of duplicated reports in the region of Catalonia. This has resulted in a drop in cases of ~80k for the region, and a daily drop of ~70k for the country | [Source](https://www.mscbs.gob.es/profesionales/saludPublica/ccayes/alertasActual/nCov/documentos/Actualizacion_323_COVID-19.pdf)
+* March 3, 2021: United Kingdom | Addition of 172 historical deaths by Public Health Scotland | [Source](https://coronavirus.data.gov.uk/details/whats-new#172_deaths_within_28_days_of_a_positive_test_added_to_scotland_and_uk_totals)
+* March 10, 2021: Minnesota, US | Inclusion of 891 backlogged cases and 138 backlogged deaths in daily report | [Source 1](https://kttc.com/2021/03/09/minnesota-reports-backlog-of-covid-19-cases-deaths-from-past-year/), [Source 2](https://www.mprnews.org/story/2021/03/09/whats-behind-spikes-in-covid-case-death-numbers-in-minnesotas-latest-data-release)
+* March 11, 2021: Texas, US | Daily report included 548 backlogged confirmed cases and 154 backlogged probable cases | [Source](https://txdshs.maps.arcgis.com/apps/opsdashboard/index.html#/ed483ecd702b4298ab01e8b9cafc8b83)
+* March 16, 2021: Alabama, US | Inclusion of 4007 historical probable and confirmed cases on March 15. Tests were performed on or during October 1, 2020 through January 1, 2021. | [Source](https://alpublichealth.maps.arcgis.com/apps/opsdashboard/index.html#/6d2771faa9da4a2786a509d82c8cf0f7)
+* March 18, 2021: Maricopa, Arizona, US | Removal of 467 cases that had inadvertently been attributed to Maricopa County | [Source](https://www.maricopa.gov/5460/Coronavirus-Disease-2019)
+* March 18, 2021: Kentucky, US | Identification of 601 historical deaths. 417 were added on March 18; the remaining 187 will be added "in the coming days" | [Source](https://www.kentucky.com/news/coronavirus/article250035379.html)
+* March 19, 2021: Kentucky, US | Inclusion of 166 of the above-referenced historical deaths | [Source](https://chfs.ky.gov/cvdaily/COVID19DailyReport031921.pdf)
+* March 19, 2021: North Carolina, US | Removal of 99 deaths that did not fit the most recent version of the state definition of a COVID-19 death | See [Issue #3839](https://github.com/CSSEGISandData/COVID-19/issues/3839)
+* March 22, 2021: Italy | Inclusion of 10,665 historical cases in the region of Bolzana | [Source](https://opendatadpc.maps.arcgis.com/apps/opsdashboard/index.html#/b0c68bce2cce478eaac82fe38d4138b1)
+* March 27, 2021: United Kingdom | Removal of 850 historical cases that had been processed incorrectly. "This affected specimen dates between 23 and 25 March in local authorities primarily in the North East and Yorkshire." | [Source](https://coronavirus.data.gov.uk/details/whats-new#removal_of_cases_incorrectly_reported_by_laboratory)
+* April 3, 2021: Iowa, US | State reports large unspecified number of backlogged deaths identified through death certificate review | Private communication with Iowa State Health Department
+* April 7, 2021: Oklahoma, US | Addition of ~1300 backlogged cases and ~1700 backlogged deaths. Cases were due to a data transfer error from a private laboratory and include cases from December to February; deaths are due to addition of a process to automate a portion of the state's death certificate review | [Source](https://www.oklahoman.com/story/news/2021/04/07/oklahoma-add-hundreds-covid-cases-went-unreported-due-tech-error/7105281002/)
+* April 9, 2021: Montana, US | Addition of 72 backlogged cases and 26 backlogged deaths | [Source 1](https://nbcmontana.com/news/local/data-reconciliation-leads-to-jump-in-recorded-covid-19-deaths-cases), [Source 2](https://billingsgazette.com/news/state-and-regional/montana-adds-229-covid-19-cases-27-more-deaths/article_071eec55-2419-53e9-9138-196ae0f65d11.html)
+* April 9, 2021: England, United Kingdom | Reduction of 8,010 cases that were deemed lateral flow test false positives due to negative confirmatory PCR | [Source](https://coronavirus.data.gov.uk/details/whats-new)
+* April 13, 2021: Alabama, US | Addition of 1150 backlogged cases from October 22, 2020 to April 7, 2021 | [Source](https://alpublichealth.maps.arcgis.com/apps/MapSeries/index.html?appid=d84846411471404c83313bfe7ab2a367)
+* April 15, 2021: Alaska, US | Addition of 20 deaths identified through a death certificate review process | [Source](https://www.adn.com/alaska-news/2021/04/15/tracking-covid-19-in-alaska-194-cases-and-20-deaths-reported-thursday-after-death-certificate-review/)
+* April 15, 2021: Nebraksa, US | Removal of 21 duplicated deaths | [Source](https://siouxlandnews.com/news/coronavirus/covid-19-in-nebraska-04-15-2021)
+* April 17, 2021: Missouri, US | Removal of 11,454 double counted cases | [Source 1](https://www.kmbc.com/article/covid-19-live-updates-coronavirus-in-kansas-city-missouri-kansas-coronavirus-04162021/36144667#), [Source 2](https://showmestrong.mo.gov/data/public-health/statewide/)
+* April 20, 2021: Alabama, US | Inclusion of 1110 backlogged cases from October 23, 2020 to April 6, 2021. 1058 are in residents of Mobile County | [Source](https://alpublichealth.maps.arcgis.com/apps/MapSeries/index.html?appid=d84846411471404c83313bfe7ab2a367) and see [issue #3984](https://github.com/CSSEGISandData/COVID-19/issues/3984)
+* April 20, 2021: Knox County, Texas, US | Negative cases due to cleaning of historical data | See [Announcement](https://github.com/CSSEGISandData/COVID-19/issues/4056)
+* April 26, 2021: Alaska, US | Inclusion of 12 deaths over the past several months identified through death certificate review | [Source](https://alaska-native-news.com/covid-19-daily-summary-april-26-2021/55402/)
+* April 26, 2021: New Jersey, US | Removal of ~10,400 duplicated confirmed and probable cases from the state total | Communication with state health department and [news source](https://www.nj.com/coronavirus/2021/04/nj-covid-updates-outdoor-capacities-to-increase-indoor-proms-can-have-dancing-heres-the-latest-april-27-2021.html)
+* April 27, 2021: West Virginia, US | Removal of 162 deaths found to not be due to COVID-19 | [Source 1](https://www.wvnews.com/news/wvnews/west-virginia-health-officer-162-deaths-found-not-to-be-covid-related-to-be-removed/article_3bb21c72-638b-5e07-a041-e343239aa340.html), [Source 2](https://www.wvnews.com/news/wvnews/west-virginia-dhhr-reports-3-new-covid-19-related-deaths-removes-162-previously-reported/article_c4bbd8b8-61f5-5423-aeef-97599f6c5f2e.html)
+* May 5, 2021: Bergen County, Nnew Jersey, US | Addition of over 1100 backlogged antigen cases | See [Announcement](https://github.com/CSSEGISandData/COVID-19/issues/4055)
+* May 7, 2021: Ravali County, Montana, US | Publication of 12 backlogged deaths | [Source](https://billingsgazette.com/news/state-and-regional/montana-reports-149-new-covid-19-cases-12-more-deaths-confirmed/article_b3dec548-4789-599d-9414-e5b56d9ec273.html)
+* May 13, 2021: Alabama, US | Inclusion of 306 backlogged cases | See [announcement](https://github.com/CSSEGISandData/COVID-19/issues/4087)
+* May 14, 2021: Alabama, US | Inclusion of 4,877 backlogged cases | See [announcement](https://github.com/CSSEGISandData/COVID-19/issues/4087)
+* May 15, 2021: Alabama, US | Inclusion of 1,235 backlogged cases | See [announcement](https://github.com/CSSEGISandData/COVID-19/issues/4087)
+* May 17, 2021: Alaska, US | 10 of 11 daily deaths identified through death certificate review | [Source](https://alaska-native-news.com/covid-19-daily-summary-may-17-2021/55811/)
+* May 18, 2021: United Kingdom | Reduction of 4,776 false positive lateral flow tests | [Source](https://coronavirus.data.gov.uk/details/whats-new) (Note for May 18)
+* May 18, 2021: Missouri, US | Weekly death certificate review resulted in a large spike in deaths, particularly in rural counties | See [announcement](https://github.com/CSSEGISandData/COVID-19/issues/4099)
+* May 19, 2021: New Castle County, Delaware, US | Large spike in cases due to reporting delays with multiple laboratories | See [announcement](https://github.com/CSSEGISandData/COVID-19/issues/4121)
+* May 20, 2021: Laramie County, Wyoming, US | 100+ case backlog due to data transfer issues with a health provider | See [announcement](https://github.com/CSSEGISandData/COVID-19/issues/4136)
+* May 20, 2021: France | Reduction of 350,000 duplicate cases without correcting historical data | See [press release](https://www.santepubliquefrance.fr/les-actualites/2021/des-indicateurs-plus-precis-pour-le-suivi-des-cas-confirmes-de-covid-19)
+* May 24, 2021: New Mexico, US | Inclusion of approximately 100 deaths identified through death certificate review | [Source](https://www.kob.com/new-mexico-news/new-mexico-to-add-approximately-100-more-covid-19-deaths-to-states-total/6117386/)
+* May 24, 2021: Brazos County, Texas, US | Inclusion of 628 backlogged cases in daily report | See [announcement](https://github.com/CSSEGISandData/COVID-19/issues/4132)
+* May 26, 2021: Oklahoma, US | An unspecified number of backlogged deaths have resulted in 373 deaths reported | [Source](https://oklahoma.gov/covid19/newsroom/2021/may/situation-update--covid-19-05-26-2021.html)
+* May 27, 2021: Los Angeles, California, US | Addition of 3,857 backlogged cases | See [discourse](https://github.com/CSSEGISandData/COVID-19/issues/4147) including a statement from the LA Times
+* May 27, 2021: Maryland, US | Addition of 538 previously unpublished COVID-19 deaths | [Source](https://southernmarylandchronicle.com/2021/05/27/maryland-department-of-health-vital-statistics-administration-issues-revision-of-covid-19-death-data/)
+* June 1, 2021: Kentucky, US | Addition of 260 backlogged deaths identified from a death certificate audit | [Source](https://www.kentucky.com/news/coronavirus/article251818393.html)
+* June 3, 2021: Indiana, US | Addition of 765 backlogged cases | [Source](https://www.wthr.com/article/news/health/coronavirus/coronavirus-numbers/indiana-coronavirus-updates-for-thursday-june-3-2021/531-a05e1e2f-019d-42e7-8a54-fb923fe14383)
+* June 6, 2021: San Mateo, California, US | Addition of 85 backlogged deaths | [Source](https://covid19.ca.gov/state-dashboard/#location-san_mateo) - "Today’s case count includes 186 deaths from San Mateo county from prior months that were not previously reported." Importantly, our data for San Mateo had not previously come from the state dashboard, explaining why our daily deaths is <186.
+* June 9, 2021: West Virginia, US | Inclusion of 18 deaths from death certificate review | [Source](https://wvmetronews.com/2021/06/09/dhhr-adds-24-additional-covid-19-deaths-to-state-numbers/)
+* June 11, 2021: Alaska, US | Inclusion of four deaths identified through death certificate review | [Source](https://www.adn.com/alaska-news/2021/06/11/tracking-covid-19-in-alaska-49-cases-reported-over-2-days-and-4-deaths-identified-in-certificate-review/)
+* June 29, 2021: California, US | Removal of 6,372 duplicated cases from the state dashboard (along with inclusion of 2,013 new cases). County-level distribution not available. | [Source](https://www.cdph.ca.gov/Programs/CID/DCDC/Pages/Immunization/ncov2019.aspx)
+* July 14, 2021: Arizona, US | Large spike in cases due to technical issue resulting in some cases having not been published in the previous two days | See [source](https://www.usnews.com/news/best-states/arizona/articles/2021-07-14/arizona-reports-covid-19-case-bulge-cites-reporting-issue)
+* July 30, 2021: Delaware, US | 128 backlogged deaths from mid-May to June 2021 reported after death certificate review | [Source](https://news.delaware.gov/2021/07/30/positive-case-numbers-continue-to-rise-and-delta-variant-continues-to-dominate/)
 
 ## Large-scale back distributions
 This section will serve to notify developers when we are able to successfully backdistribute any of the large instances of retrospective reporting.
@@ -210,34 +383,91 @@ Date: Location | File | Change | Data source for change
 * August 2: New Jersey, US (June 25) | time_series_covid19_deaths_US.csv | Redistribution of probable deaths into Unassigned, New Jersey
 * August 6: Harris County, Texas (Texas July 27) | In line with alteration to reporting standards, time series for coronavirus deaths in Harris County has been updated from 3/7 to 8/5/2020 | Details can be found in the press release from the state [here](https://www.dshs.texas.gov/news/releases/2020/20200727.aspx).
 * September 22: Massachusetts (September 3) | Reconciliation of changes to probable cases | Detailed [here](https://github.com/CSSEGISandData/COVID-19/issues/3146)
-* October 1: North Carolina | Back distribution of probable cases | See [Issue #3183](https://github.com/CSSEGISandData/COVID-19/issues/3183#ref-commit-663bcf9)
+* October 1: North Carolina, US | Back distribution of probable cases | See [Issue #3183](https://github.com/CSSEGISandData/COVID-19/issues/3183#ref-commit-663bcf9)
+* November 9: Wisconsin, US | Back distribution of probable cases and deaths through October 19
+* November 10: Louisiana, US | Back distribution of probable cases from August 26 to November 9
+* November 13: Georgia, US | Probable deaths back distributed to November 3
+* November 18: Alabama, US | Back distribution of probable case spike on September 15
+* November 22: Texas,US | Introduction of probable cases for Brazos, Denton, and Dallas counties | Data was back distributed based on historical reporting from local government sources
+* December 2: Kazakhstan | Reporting in Kazahkstan has been modified to include probable cases, deaths, and recoveries.  
+* December 4: Guam, US | Back-distribution of probable cases and deaths from official sources | | [Guam Dashboard](https://dphss.guam.gov/covid-19/)
+* December 14: Texas, US | Back-distribution of county level probable cases as provided by the Texas Department of State Health Services | [Source](https://dshs.texas.gov/coronavirus/AdditionalData.aspx)
+* December 17: Washington, US | Back-distribution of 7,671 probable cases from present to June | Back distribution used the [Washington COVID-19 dashboard]
+* February 09, 2021: Indiana, US | Redistribution of previously identified historical deaths to unassigned category. State total reported from Department of Health was compared to time_series_covid19_deaths_us.csv and the difference was distributed to Unassigned, Indiana. | [Indiana source](https://www.coronavirus.in.gov/2393.htm) | We hope to receive a county level distribution from the state health department but we have not yet received a response
+* February 16, 2021: Ohio, US | Back distribution of deaths at the county level to correct for large release of backlogged deaths. | [Data source - csv link](https://coronavirus.ohio.gov/static/dashboards/COVIDSummaryData.csv)
+* February 19, 2021: New Hampshire, US | Redsitribution of recently identified historical cases from November to January to unassigned category. From November 1, state total reported from Department of Health was compared to time_series_covid19_deaths_us.csv and the difference was distributed to Unassigned, New Hampshire | [Data source](https://www.nh.gov/covid19/dashboard/trends.htm#dash)
+* March 24, 2021: Indiana, US | The deaths back distributed on February 9 have been distributed to their respective counties and removed from the unassigned category. Our appreciation to the Indiana Department of Health for their help with this issue.
+* April 2, 2021: Alaska, US | In response to the state's separation of Valdez-Cordova, AK into Copper River, AK and Chugach, AK, we have recreated the time series including these two locations using the official data from the Alaska dashboard | [Source](https://alaska-coronavirus-vaccine-outreach-alaska-dhss.hub.arcgis.com/app/6a5932d709ef4ab1b868188a4c757b4f)
+* June 2, 2021: Pennsylvania, US | Deaths for Chester county, PA were determined to be greater at the state level of reporting than the direct reporting from Chester county. The data has been redistributed based on the state level histroical deaths and moving forward Chester county data will be collected from the maximum value between the state and county source. | [State Source](https://www.health.pa.gov/topics/disease/coronavirus/Pages/Cases.aspx) | [County Source](https://chesco.maps.arcgis.com/apps/opsdashboard/index.html#/975082d579454c3ca7877db0a44e61ca
+
 
 ## Irregular Update Schedules
 As the pandemic has progressed, several locations have altered their reporting schedules to no longer provide daily updates. As these locations are identified, we will list them in this section of the README. We anticipate that these irregular updates will cause cyclical spikes in the data and smoothing algorithms should be applied if the data is to be used for modeling.
 
 United States
-* Rhode Island: Not updating case, death, or recovered data on the weekends. Releasing county level cases and deaths once per week.
-* Conneticut: Not updating case, death, or recovered data on the weekends.
-* Illinois: Releasing probable cases once per week.
-* District of Columbia: Not updating on the weekends. Periodically updated using data available [here](https://coronavirus.dc.gov/data).
-* Louisiana: Not updating on the weekends.
-* Michigan: No case data provided for August 21. 
-* Kansas: No data for the weekend of August 22-23.
-* Guam: Not reporting data on weekends.
-* Michigan: Not providing death data on Sundays.
-* Florida: Did not update on weekend for October 10-11.
-* Washington: Did not update October 10-12 due to data entry issue. Back distribution is not available.
+* Alabama: Providing data Monday, Wednesday, and Friday
+* Alaska: Providing data Monday, Wednesday, and Friday, excluding holidays.
+* Arkansas: Providing data Monday-Friday. Resuming weekend reporting July 24, 2021.
+* California: Providing data Monday-Friday.
+* Colorado: Providing data Monday-Friday.
+* Conneticut: Providing data Monday-Friday.
+* District of Columbia: Providing data Monday-Friday.
+* Florida: Providing data once per week (Fridays).
+* Georgia: Providing data Monday-Friday.
+* Guam: Providing data Monday-Friday.
+* Idaho: Providing data Monday-Friday.
+* Illinois: Providing data Monday-Friday.
+* Indiana: Providing data Monday-Friday.
+* Iowa: Providing data once weekly (day of the week TBC).
+* Kansas: Providing data Monday, Wednesdays, and Fridays. No data for the weekend of August 22-23.
+* Kentucky: Providing data Monday-Friday.
+* Louisiana: Providing data Monday-Friday.
+* Maine: Providing data Tuesday-Saturday.
+* Massachuetts: Providing data Monday-Friday.
+* Minnesota: Providing data Monday-Friday.
+* Mississippi: Providing data Monday-Friday.
+* Michigan: Providing data Tuesdays and Fridays (as of 07/07/2021). No case data provided for August 21.
+* Montana: Providing data Monday-Friday.
+* Nebraska: **Retired dashboard. We are looking for a solution**
+* Nevada: Providing data Monday-Friday.
+* New Hampshire: Providing data Monday-Friday.
+* New Mexico: Providing data Monday-Friday.
+* North Carolina: Providing data Monday-Friday.
+* Ohio: Providing death data twice per week (normally Tuesdays and Sundays).
+* Oklahoma: Only updating deaths and county-level case data on Tuesdays. State level case data updated Monday-Friday.
+* Oregon: Providing data Monday-Friday (as of July 10, 2021).
+* Rhode Island: Providing state level data Monday-Friday. County level cases and death data is released once per week.
+* South Carlina: Providing data Monday-Friday.
+* South Dakota: Providing data Wednesdays only.
+* Tennessee: Providing data Monday-Friday.
+* Utah: Providing data Monday-Friday.
+* Vermont: Providing data Monday-Friday.
+* Virginia: Providing data Monday-Friday.
+* Washington: Did not update October 10-12 due to data entry issue. As of December 20, only updating Monday-Saturday. As of August 1, only updating Monday-Friday.
+* West Virginia: Providing data Monday-Friday.
+* Wisconsin: Providing data Monday-Friday.
+* Wyoming: Providing data Monday-Friday.
+
+
 
 International
-* Sweden: Not updating case, death, or recovered data Saturday-Monday. Updates expected Tuesdays and Fridays.
-* Spain: Not updating case or death data on the weekends (and is not currently providing recoveries at any time)
-* Nicaragua: Releasing case, death, and recovered data once per week.
-* UK: daily death toll paused on July 18. ([GOV.UK](https://www.gov.uk/guidance/coronavirus-covid-19-information-for-the-public#number-of-cases) and [Reuters](https://www.reuters.com/article/us-health-coronavirus-britain-casualties-idUSKCN24J0GC))
-* France: No longer releasing case, hospitalization, or death data on the weekends. Please see [Tableau dashboard](https://dashboard.covid19.data.gouv.fr/vue-d-ensemble?location=FRA). 
+* Belgium: Providing data Tuesday-Saturday.
+* Bosnia and Herezegovina: Not updating data on the weekends.
+* Costa Rica: Updating data on Wednesdays and Saturdays only.
 * Denmark: Not updating case, death, or recovered data on the weekends.
-* France: No update to deaths or recoveries for the weekend of August 8 and 9.
-* UK (2): Technical difficulties with the national dashboard are resulting in no update for August 11. [Source](https://twitter.com/phe_uk/status/1293245784599781376?s=21). Corrected on August 12.
+* France: No longer releasing case, hospitalization, or death data on the weekends. Please see [Tableau dashboard](https://dashboard.covid19.data.gouv.fr/vue-d-ensemble?location=FRA). No update to deaths or recoveries for the weekend of August 8 and 9.
+* Honduras: Providing data Monday-Friday.
+* Ireland: Providing death data once weekly.
 * Luxembourg: Not providing actionable data on weekends.
+* Mexico: Beginning November 10, recoveries are available at the national level only and will be grouped in the "Unassigned, Mexico" entry.
+* Nicaragua: Releasing case, death, and recovered data once per week.
+* NSW, Australia: NSW Health has suspended its survey of the recovery status of patients with COVID-19 to focus on the recent increase in community transmission on July 31, 2020. Therefore, recovery statistics are no longer presented. ([Source](https://www.nsw.gov.au/covid-19/find-facts-about-covid-19), [Issue #3694](https://github.com/CSSEGISandData/COVID-19/issues/3694))
+* Spain: Not updating case or death data on the weekends (and is not currently providing recoveries at any time)
+* Sweden: Not updating case, death, or recovered data Saturday-Monday. Updates expected Tuesdays through Fridays.
+* UK: daily death toll paused on July 18. ([GOV.UK](https://www.gov.uk/guidance/coronavirus-covid-19-information-for-the-public#number-of-cases) and [Reuters](https://www.reuters.com/article/us-health-coronavirus-britain-casualties-idUSKCN24J0GC)). Technical difficulties with the national dashboard are resulting in no update for August 11. [Source](https://twitter.com/phe_uk/status/1293245784599781376?s=21). Corrected on August 12.
+* Wales, UK: Providing data Monday-Saturday.
+
+
 
 
 ---
@@ -262,7 +492,7 @@ International
   *	Unassigned, US: UID = 840 (country code3) + 900XX (state FIPS code). Ranging from 8409001 to 84090056.
   *	US counties: UID = 840 (country code3) + XXXXX (5-digit FIPS code).
   *	Exception type 1, such as recovered and Kansas City, ranging from 8407001 to 8407999.
-  *	Exception type 2, Bristol Bay plus Lake Peninsula replaces Bristol Bay and its FIPS code. Population is 836 (Bristol Bay) + 1,592 (Lake and Peninsula) = 2,428 (Bristol Bay plus Lake Peninsula). ~~New York City replaces New York County and its FIPS code. New York City popluation is calculated as Bronx (1,418,207) + Kings (2,559,903) + New York (1,628,706) + Queens (2,253,858) + Richmond (476,143) = NYC (8,336,817). (updated on Aug 31)~~ 
+  *	Exception type 2, Bristol Bay plus Lake Peninsula replaces Bristol Bay and its FIPS code. Population is 836 (Bristol Bay) + 1,592 (Lake and Peninsula) = 2,428 (Bristol Bay plus Lake Peninsula). 2148 (Hoonah-Angoon) + 579 (Yakutat) = 2727 (Yakutat plus Hoonah-Angoon). UID is 84002282, the same as Yakutat. ~~New York City replaces New York County and its FIPS code. New York City popluation is calculated as Bronx (1,418,207) + Kings (2,559,903) + New York (1,628,706) + Queens (2,253,858) + Richmond (476,143) = NYC (8,336,817). (updated on Aug 31)~~ 
   *	Exception type 3, Diamond Princess, US: 84088888; Grand Princess, US: 84099999.
   * Exception type 4, municipalities in Puerto Rico are regarded as counties with FIPS codes. The FIPS code for the unassigned category is defined as 72999.
 4. Population data sources.
